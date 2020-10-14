@@ -5,7 +5,7 @@ inputs:
     enum:
       - 'yes'
       - 'no'
-    default: 'no'
+    default: 'yes'
     title: Snapshot
     description: Snapshot after Deployment
 resources:
