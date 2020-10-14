@@ -1,0 +1,39 @@
+formatVersion: 1
+inputs:
+  Snapshot:
+    type: string
+    enum:
+      - 'yes'
+      - 'no'
+    default: 'no'
+    title: Snapshot
+    description: Snapshot after Deployment
+resources:
+  Ubuntu:
+    type: Cloud.vSphere.Machine
+    metadata:
+      layoutPosition:
+        - 0
+        - 0
+    properties:
+      imageRef: Ubuntu1604-temp/ci-prepared
+      flavor: small
+      resourceName: '${self.resourceName}'
+      ipAddress: '${self.ipaddress}'
+      vmName: '${self.vmname}'
+      snapshot: '${input.Snapshot}'
+      constraints:
+        - tag: vsphere-env
+      networks:
+        - network: '${resource.VLAN111.id}'
+  VLAN111:
+    type: Cloud.vSphere.Network
+    metadata:
+      layoutPosition:
+        - 1
+        - 0
+    properties:
+      networkType: existing
+      constraints:
+        - tag: vsphere-env
+
