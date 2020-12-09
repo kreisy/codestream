@@ -17,7 +17,7 @@ inputs:
         size:
           type: integer
           title: size
-    maxItems: 15
+    maxItems: 16
   Backup:
     type: string
     enum:
