@@ -1,0 +1,43 @@
+formatVersion: 1
+inputs:
+  Cloud:
+    type: string
+    enum:
+      - 'env:vsphere'
+      - 'env:google'
+      - 'env:azure'
+    default: 'env:vsphere'
+    title: Cloud
+  OS:
+    type: string
+    title: OS
+    default: ubuntu
+    enum:
+      - ubuntu
+      - windows-basic
+      - ubuntu1804
+resources:
+  Rewe:
+    type: Cloud.Machine
+    metadata:
+      layoutPosition:
+        - 0
+        - 0
+    properties:
+      image: '${input.OS}'
+      flavor: small
+      constraints:
+        - tag: '${input.Cloud}'
+      networks:
+        - network: '${resource.ReweNetwork.id}'
+  ReweNetwork:
+    type: Cloud.Network
+    metadata:
+      layoutPosition:
+        - 1
+        - 0
+    properties:
+      networkType: existing
+      constraints:
+        - tag: '${input.Cloud}'
+
