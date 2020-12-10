@@ -5,6 +5,7 @@ inputs:
     enum:
       - 'env:vsphere'
       - 'env:google'
+      - 'env:azure'
     default: 'env:vsphere'
     title: Cloud
   OS:
@@ -14,6 +15,7 @@ inputs:
     enum:
       - ubuntu
       - windows-basic
+      - ubuntu1804
 resources:
   Rewe:
     type: Cloud.Machine
