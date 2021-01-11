@@ -1,0 +1,107 @@
+formatVersion: 1
+inputs:
+  Service:
+    type: string
+    title: Service
+    default: InstallHttpd
+    enum:
+      - InstallHttpd
+      - InstallMysql
+  disks:
+    type: array
+    title: disks
+    items:
+      title: disk
+      type: object
+      properties:
+        size:
+          type: integer
+          title: size
+    maxItems: 15
+  Backup:
+    type: string
+    enum:
+      - 'yes'
+      - 'no'
+    description: Snapshot after Deployment
+    default: 'yes'
+    title: Backup
+  ftp-entry:
+    type: string
+    default: 'yes'
+    enum:
+      - 'yes'
+      - 'no'
+    title: ftp-entry
+  eMail:
+    type: string
+    title: eMail
+    default: 'yes'
+    enum:
+      - 'yes'
+      - 'no'
+  mySQL-entry:
+    type: string
+    title: mySQL-entry
+    default: 'yes'
+    enum:
+      - 'yes'
+      - 'no'
+resources:
+  Cloud_Ansible_Tower_1:
+    type: Cloud.Ansible.Tower
+    metadata:
+      layoutPosition:
+        - 0
+        - 0
+    properties:
+      host: '${resource.Ubuntu.*}'
+      account: Ansible1
+      jobTemplates:
+        provision:
+          - '${input.Service}'
+  Ubuntu:
+    type: Cloud.Machine
+    metadata:
+      layoutPosition:
+        - 0
+        - 1
+    properties:
+      imageRef: centos7-temp/ci-prepared
+      flavor: small
+      resourceName: '${self.resourceName}'
+      ipAddress: '${self.ipaddress}'
+      vmName: '${self.vmname}'
+      snapshot: '${input.Backup}'
+      ftp: '${input.ftp-entry}'
+      sql: '${input.mySQL-entry}'
+      mail: '${input.eMail}'
+      tags:
+        - value: app
+          key: httpd
+      constraints:
+        - tag: 'env:vsphere'
+      networks:
+        - network: '${resource.VLAN16.id}'
+      attachedDisks: '${map_to_object(resource.AdditionalDisks[*].id, "source")}'
+  AdditionalDisks:
+    type: Cloud.Volume
+    metadata:
+      layoutPosition:
+        - 0
+        - 2
+    allocatePerInstance: true
+    properties:
+      capacityGb: '${input.disks[count.index].size}'
+      count: '${length(input.disks)}'
+  VLAN16:
+    type: Cloud.Network
+    metadata:
+      layoutPosition:
+        - 1
+        - 0
+    properties:
+      networkType: existing
+      constraints:
+        - tag: 'env:vsphere'
+
