@@ -1,0 +1,49 @@
+formatVersion: 1
+inputs:
+  Snapshot:
+    type: string
+    title: Snapshot
+    enum:
+      - 'yes'
+      - 'no'
+    default: 'no'
+resources:
+  Cloud_Machine_1:
+    type: Cloud.Machine
+    metadata:
+      layoutPosition:
+        - 0
+        - 0
+    properties:
+      image: ubuntu
+      flavor: small
+      constraints:
+        - tag: 'env:aws'
+  KroneSQL:
+    type: Cloud.Machine
+    metadata:
+      layoutPosition:
+        - 0
+        - 1
+    properties:
+      snapshot: '${input.Snapshot}'
+      image: ubuntu
+      flavor: small
+      constraints:
+        - tag: 'env:vsphere'
+      tags:
+        - value: SQL
+          key: App
+      networks:
+        - network: '${resource.Cloud_Network_1.id}'
+  Cloud_Network_1:
+    type: Cloud.Network
+    metadata:
+      layoutPosition:
+        - 1
+        - 0
+    properties:
+      networkType: existing
+      constraints:
+        - tag: 'env:vsphere'
+
