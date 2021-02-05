@@ -6,12 +6,12 @@ inputs:
   env:
     type: string
     enum:
+      - 'env:vmc'
+      - 'env:vsphere'
       - 'env:aws'
       - 'env:azure'
       - 'env:google'
-      - 'env:vsphere'
-      - 'env:vmc'
-    default: 'env:aws'
+    default: 'env:vmc'
     title: Environment
     description: Target Environment
   size:
