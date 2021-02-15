@@ -30,11 +30,45 @@ inputs:
       - 2
       - 3
     default: 1
+  BMW-Modules:
+    type: string
+    enum:
+      - Archiv
+      - BMC
+      - CMS
+      - ContINT
+      - Digital
+      - Docker-Infra
+      - Docker-Postgrees
+      - EAI
+      - ESearch
+      - Groupdir
+      - Infrastruktur
+      - InstallServer
+      - IPS/PCS
+      - Jumpserver
+      - K-WOM
+      - MQS
+      - NAGIOS
+      - ORACLE
+      - POSTGRES
+      - SAP
+      - SAPHANA
+      - Remedy
+      - Web
+    default: Web
   security:
     type: string
     enum:
       - high
       - low
+  Backup:
+    type: string
+    enum:
+      - 'yes'
+      - 'no'
+    default: 'no'
+    title: Backup
   wavefront_proxy:
     type: string
     default: wvfp.cpod-vrealizesuite.az-demo.shwrfr.com
