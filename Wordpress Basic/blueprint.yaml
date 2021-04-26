@@ -56,6 +56,10 @@ inputs:
 resources:
   DBTier:
     type: Cloud.Machine
+    metadata:
+      layoutPosition:
+        - 0
+        - 0
     properties:
       name: mysql
       image: ubuntu
@@ -85,6 +89,10 @@ resources:
       attachedDisks: []
   WebTier:
     type: Cloud.Machine
+    metadata:
+      layoutPosition:
+        - 0
+        - 1
     properties:
       name: wordpress
       image: ubuntu
@@ -117,6 +125,10 @@ resources:
          - service apache2 reload
   WP-Network:
     type: Cloud.Network
+    metadata:
+      layoutPosition:
+        - 1
+        - 0
     properties:
       name: WP-Network
       networkType: existing
