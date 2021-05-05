@@ -1,0 +1,82 @@
+formatVersion: 1
+inputs:
+  Backup:
+    type: string
+    enum:
+      - 'yes'
+      - 'no'
+    default: 'no'
+    title: Backup
+    description: Snapshot after Deployment
+resources:
+  Ansible-Web:
+    type: Cloud.Ansible.Tower
+    metadata:
+      layoutPosition:
+        - 0
+        - 0
+    properties:
+      host: '${resource.WEB.*}'
+      account: Ansible1
+      templates:
+        provision:
+          - name: InstallHttpd
+            type: job
+  WEB:
+    type: Cloud.Machine
+    metadata:
+      layoutPosition:
+        - 0
+        - 1
+    properties:
+      image: centos
+      flavor: small
+      customizationSpec: linux-custom
+      ipAddress: '${self.ipaddress}'
+      vmName: '${self.vmname}'
+      snapshot: '${input.Backup}'
+      constraints:
+        - tag: 'env:vsphere'
+      networks:
+        - network: '${resource.Infoblox.id}'
+  SQL:
+    type: Cloud.Machine
+    metadata:
+      layoutPosition:
+        - 0
+        - 2
+    properties:
+      image: centos
+      flavor: small
+      customizationSpec: linux-custom
+      ipAddress: '${self.ipaddress}'
+      vmName: '${self.vmname}'
+      snapshot: '${input.Backup}'
+      constraints:
+        - tag: 'env:vsphere'
+      networks:
+        - network: '${resource.Infoblox.id}'
+  Ansible-SQL:
+    type: Cloud.Ansible.Tower
+    metadata:
+      layoutPosition:
+        - 0
+        - 3
+    properties:
+      host: '${resource.SQL.*}'
+      account: Ansible1
+      templates:
+        provision:
+          - name: InstallMysql
+            type: job
+  Infoblox:
+    type: Cloud.Network
+    metadata:
+      layoutPosition:
+        - 1
+        - 0
+    properties:
+      networkType: existing
+      constraints:
+        - tag: 'env:infoblox'
+
