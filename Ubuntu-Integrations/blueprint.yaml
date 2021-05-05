@@ -17,7 +17,7 @@ inputs:
         size:
           type: integer
           title: size
-    maxItems: 15
+    maxItems: 16
   Backup:
     type: string
     enum:
@@ -57,9 +57,10 @@ resources:
     properties:
       host: '${resource.Ubuntu.*}'
       account: Ansible1
-      jobTemplates:
+      templates:
         provision:
-          - '${input.Service}'
+          - name: '${input.Service}'
+            type: job
   Ubuntu:
     type: Cloud.Machine
     metadata:
@@ -67,9 +68,8 @@ resources:
         - 0
         - 1
     properties:
-      imageRef: centos7-temp/ci-prepared
+      image: centos
       flavor: small
-      resourceName: '${self.resourceName}'
       ipAddress: '${self.ipaddress}'
       vmName: '${self.vmname}'
       snapshot: '${input.Backup}'
@@ -84,6 +84,7 @@ resources:
       networks:
         - network: '${resource.VLAN16.id}'
       attachedDisks: '${map_to_object(resource.AdditionalDisks[*].id, "source")}'
+      remoteAccess: ''
   AdditionalDisks:
     type: Cloud.Volume
     metadata:
