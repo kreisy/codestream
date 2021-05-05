@@ -1,0 +1,54 @@
+formatVersion: 1
+inputs:
+  Snapshot:
+    type: string
+    enum:
+      - 'yes'
+      - 'no'
+    default: 'no'
+    title: Snapshot
+    description: Snapshot after Deployment
+resources:
+  Cloud_Ansible_Tower_1:
+    type: Cloud.Ansible.Tower
+    metadata:
+      layoutPosition:
+        - 0
+        - 0
+    properties:
+      host: '${resource.Ubuntu.*}'
+      account: Ansible1
+      templates:
+        provision:
+          - name: Demo Job Template
+            type: job
+  Ubuntu:
+    type: Cloud.Machine
+    metadata:
+      layoutPosition:
+        - 0
+        - 1
+    properties:
+      imageRef: Ubuntu1604-temp/ci-prepared
+      flavor: small
+      vmname: '${self.resourceName}'
+      ipAddress: '${self.ipaddress}'
+      snapshot: '${input.Snapshot}'
+      constraints:
+        - tag: 'env:vsphere'
+      networks:
+        - network: '${resource.Cloud_Network_1.id}'
+      remoteAccess:
+        keyPair: vmware
+        password: VMware1!
+  Cloud_Network_1:
+    type: Cloud.Network
+    metadata:
+      layoutPosition:
+        - 1
+        - 0
+    properties:
+      networkType: existing
+      constraints:
+        - tag: 'env:vsphere'
+
