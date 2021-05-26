@@ -134,4 +134,14 @@ resources:
       networkType: existing
       constraints:
         - tag: '${input.env}'
+  Custom_AD-User_1:
+    type: Custom.AD-User
+    metadata:
+      layoutPosition:
+        - 2
+        - 0
+    properties:
+      accountName: ''
+      displayName: ''
+      ouContainer: {}
 
