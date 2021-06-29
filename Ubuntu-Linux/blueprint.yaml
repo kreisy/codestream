@@ -1,0 +1,51 @@
+formatVersion: 1
+inputs:
+  Size:
+    type: string
+    enum:
+      - small
+      - medium
+      - large
+    description: 'Choose between small, medium, large size'
+    default: small
+  Backup:
+    type: string
+    title: Backup
+    default: 'no'
+    enum:
+      - 'yes'
+      - 'no'
+resources:
+  Ubuntu:
+    type: Cloud.Machine
+    metadata:
+      layoutPosition:
+        - 0
+        - 0
+    properties:
+      image: ubuntu
+      flavor: '${input.Size}'
+      customizationSpec: linux-custom
+      snapshot: '${input.Backup}'
+      constraints:
+        - tag: 'env:vsphere'
+      tags:
+        - value: Linux
+          key: Ubuntu
+      networks:
+        - network: '${resource.Infoblox.id}'
+          assignment: static
+      remoteAccess:
+        keyPair: vmware
+        password: VMware1!
+  Infoblox:
+    type: Cloud.Network
+    metadata:
+      layoutPosition:
+        - 1
+        - 0
+    properties:
+      networkType: existing
+      constraints:
+        - tag: 'env:vsphere'
+
