@@ -1,0 +1,26 @@
+inputs:
+  project_name:
+    type: string
+resources:
+  terraform:
+    type: Cloud.Terraform.Configuration
+    metadata:
+      layoutPosition:
+        - 0
+        - 0
+    properties:
+      variables:
+        refresh_token: Sr1vphk2iEZBJB5xkN2AS0HTbU4QDOR6
+        url: 'https://vra1.vcc.vmw'
+        insecure: true
+        zone_name: vc7.vcc.vmw / vSphere7-Datacenter
+        project_name: '${input.project_name}'
+        usertoadd: '${env.requestedBy}'
+        catalog_source_id: 1105e895-64ec-493d-922f-23fc744f1928
+      providers: []
+      terraformVersion: 0.13.5
+      configurationSource:
+        repositoryId: 972607d1-4792-4ac3-8a25-d317fb8debf5
+        commitId: f71f19683115a01cb7a794e7641389dbdda1c6e3
+        sourceDirectory: vra-project
+
