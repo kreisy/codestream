@@ -1,0 +1,22 @@
+formatVersion: 1
+inputs:
+  Namespace:
+    type: string
+    title: Namespace
+    description: Supervisor Namespace Name
+resources:
+  Supervisor_Namespace:
+    type: Cloud.SV.Namespace
+    metadata:
+      layoutPosition:
+        - 0
+        - 0
+    properties:
+      storage:
+        - profile:
+            constraints:
+              - tag: 'sp:tkg'
+      name: '${input.Namespace}'
+      constraints:
+        - tag: 'k8s:tanzu'
+
