@@ -4,12 +4,16 @@ inputs:
     type: string
     title: Service
     default: InstallHttpd
-    enum:
-      - InstallHttpd
-      - InstallMysql
+    description: Choose between Apache and MySQL
+    oneOf:
+      - title: Apache
+        const: InstallHttpd
+      - title: MySQL
+        const: InstallMysql
   disks:
     type: array
     title: disks
+    description: Add additional Disks
     items:
       title: disk
       type: object
@@ -29,6 +33,7 @@ inputs:
   ftp-entry:
     type: string
     default: 'yes'
+    description: create an ftp entry
     enum:
       - 'yes'
       - 'no'
@@ -36,17 +41,46 @@ inputs:
   eMail:
     type: string
     title: eMail
+    description: send an eMail
     default: 'yes'
     enum:
       - 'yes'
       - 'no'
-  mySQL-entry:
+  DNS-entry:
     type: string
-    title: mySQL-entry
+    title: DNS-entry
+    description: create an DNS entry
     default: 'yes'
     enum:
       - 'yes'
       - 'no'
+  iTop:
+    type: string
+    title: iTop
+    description: Open Helpticket in iTop
+    default: 'yes'
+    enum:
+      - 'yes'
+      - 'no'
+  Flavor:
+    type: string
+    title: Flavor
+    description: choose the Flavor
+    default: small
+    enum:
+      - small
+      - medium
+      - large
+  IPAM:
+    type: string
+    title: IPAM
+    description: choose between vRA and Infoblox IPAM
+    default: 'env:nsx'
+    oneOf:
+      - title: vRA
+        const: 'env:nsx'
+      - title: Infoblox
+        const: 'env:infoblox'
 resources:
   Cloud_Ansible_Tower_1:
     type: Cloud.Ansible.Tower
@@ -55,26 +89,24 @@ resources:
         - 0
         - 0
     properties:
-      host: '${resource.Ubuntu.*}'
+      host: '${resource.custom.*}'
       account: Ansible1
       templates:
         provision:
           - name: '${input.Service}'
             type: job
-  Ubuntu:
-    type: Cloud.Machine
+  custom:
+    type: Cloud.vSphere.Machine
     metadata:
       layoutPosition:
         - 0
         - 1
     properties:
-      image: centos
-      flavor: small
-      ipAddress: '${self.ipaddress}'
-      vmName: '${self.vmname}'
+      image: ansible
+      flavor: '${input.Flavor}'
       snapshot: '${input.Backup}'
       ftp: '${input.ftp-entry}'
-      sql: '${input.mySQL-entry}'
+      dns: '${input.DNS-entry}'
       mail: '${input.eMail}'
       tags:
         - value: app
@@ -83,6 +115,7 @@ resources:
         - tag: 'env:vsphere'
       networks:
         - network: '${resource.VLAN16.id}'
+          assignment: static
       attachedDisks: '${map_to_object(resource.AdditionalDisks[*].id, "source")}'
       remoteAccess: ''
   AdditionalDisks:
@@ -104,5 +137,5 @@ resources:
     properties:
       networkType: existing
       constraints:
-        - tag: 'env:vsphere'
+        - tag: '${input.IPAM}'
 
